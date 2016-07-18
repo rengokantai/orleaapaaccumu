@@ -10,10 +10,64 @@ Auth token(A) -->visibility (B) ->can not see
 
 #####2
 ######1 install
+install hadoop
 ```
-wget ....
-tar ....
-vi conf/accumulo-env.sh
+wget http://apache.claz.org/hadoop/common/hadoop-2.7.2/hadoop-2.7.2.tar.gz
+tar zxvf hadoop-2.7.2.tar.gz
+mv hadoop-2.7.2 /usr/local/hadoop 
+```
+
+then .bashrc
+```
+export JAVA_HOME=/usr
+export HADOOP_PREFIX=/usr/local/hadoop   #for accumulo
+export HADOOP_HOME=/usr/local/hadoop
+export PATH=$PATH:$HADOOP_HOME/bin
+export PATH=$PATH:$HADOOP_HOME/sbin
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib"
+```
+install accumulo
+```
+wget http://apache.spinellicreations.com/accumulo/1.7.2/accumulo-1.7.2-bin.tar.gz
+tar zxvf accumulo-1.7.2-bin.tar.gz
+```
+then
+```
+mkdir -p /usr/local/hadoop_tmp/hdfs/namenode && mkdir -p /usr/local/hadoop_tmp/hdfs/datanode
+```
+open core-site
+```
+vim /usr/local/hadoop/etc/hadoop/core-site.xml
+```
+edit
+```
+<configuration>
+<property>
+<name>fs.default.name</name>
+<value>hdfs://localhost:9000</value>
+</property>
+</configuration>
+```
+
+create accumulo folder:
+```
+sudo su hduser
+hadoop fs -mkdir /accumulo
+hadoop fs -chown root /accumulo
+hadoop fs -rm -r -f /accumulo
+```
+if locked,
+```
+hdfs dfsadmin -safemode leave
+```
+
+
+vim conf/accumulo-env.sh
 ```
 set
 ```
